@@ -1,7 +1,7 @@
 from yelpapi import YelpAPI
 import time, datetime
 
-api_key = 'JwQvJoL9wUVzdYm7zDfkL6LmHI0I0xqpND6fS93EssWtjgnWqLQp3y5_dRtmPBkT7ds6yXwvIqueimKf3j-kgCibv8cwNVOk_Io6TKUv9egrAP1AOEe6QmLpWN96Z3Yx'
+api_key = ''
 yelp_api = YelpAPI(api_key)
 
 business_id = 'capital-one-café-los-angeles-10'
