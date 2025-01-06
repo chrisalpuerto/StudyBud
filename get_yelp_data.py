@@ -7,8 +7,6 @@ load_dotenv(dotenv_path='hidden.env')
 api_key = os.getenv('YELP_API_KEY')
 yelp_api = YelpAPI(api_key)
 
-business_id = 'capital-one-café-los-angeles-10'
-
 # Business query function is specific to a certain business
 def get_business_query(api_key, business_id):
     yelp_api = YelpAPI(api_key)
@@ -20,6 +18,12 @@ def get_search_query(api_key,term,location):
     yelp_api = YelpAPI(api_key)
     response = yelp_api.search_query(term=term, location=location,limit=1)
     return response
+# TEST CODE FOR GETTING BUSINESS ID USING SEARCH QUERY FUNCTION
+def get_business_id(api_key,term,location):
+    response = get_search_query(api_key,term,location)
+    for business in response['businesses']:
+        return business['id']
+
 
 day_map = {
     0: 'Monday',
@@ -53,7 +57,7 @@ def display_all_hours(response):
                 end = open_info['end']
                 print(f"{day} : {start} - {end}")
     else:
-        print('No hours found for', business_id)
+        print('No hours found for this business')
 
 def display_today_hours(response):
     hours_str = ""
@@ -68,7 +72,32 @@ def display_today_hours(response):
     else:
         hours_str = "No hours found for this business"
     return hours_str
-response = get_business_query(api_key, business_id)
 
 
-display_today_hours(response)
+# get and display cafe functions
+
+def get_cafes(api_key,location,term):
+    response = get_search_query(api_key,term,location)
+    cafes =[]
+    for business in response['businesses']:
+        business_id = business['id']
+        response_hours = get_business_query(api_key,business_id)
+        cafes.append({
+            'name': business['name'],
+            'rating': business['rating'],
+            'address': ' '.join(business['location']['display_address']),
+            'review_count': business['review_count'],
+            'hours': display_today_hours(response_hours)
+        })
+    return cafes
+
+def display_cafes():
+    location = input(str('Enter your location or ZIP code: '))
+    cafes = get_cafes(api_key,location,'cafes')
+
+    for cafe in cafes:
+        print(cafe['name'])
+        print(f"Rating: {cafe['rating']} / 5 stars")
+        print(f"Address: {cafe['address']}")
+        print(f"Hours for {cafe['hours']}")
+        print()
