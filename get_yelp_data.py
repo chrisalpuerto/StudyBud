@@ -1,11 +1,26 @@
 from yelpapi import YelpAPI
 import time, datetime
+import os
+from dotenv import load_dotenv
 
-api_key = ''
+load_dotenv(dotenv_path='hidden.env')
+api_key = os.getenv('YELP_API_KEY')
 yelp_api = YelpAPI(api_key)
 
 business_id = 'capital-one-café-los-angeles-10'
-response = yelp_api.business_query(id=business_id)
+
+# Business query function is specific to a certain business
+def get_business_query(api_key, business_id):
+    yelp_api = YelpAPI(api_key)
+    response = yelp_api.business_query(id=business_id)
+    return response
+
+# Search query function is more general and can be used for any search
+def get_search_query(api_key,term,location):
+    yelp_api = YelpAPI(api_key)
+    response = yelp_api.search_query(term=term, location=location,limit=1)
+    return response
+
 day_map = {
     0: 'Monday',
     1: 'Tuesday',
@@ -41,6 +56,7 @@ def display_all_hours(response):
         print('No hours found for', business_id)
 
 def display_today_hours(response):
+    hours_str = ""
     if 'hours' in response:
         for hours in response['hours']:
             for open_info in hours['open']:
@@ -48,7 +64,11 @@ def display_today_hours(response):
                     day = day_map[open_info['day']]
                     start = calculate_hour(open_info['start'])
                     end = calculate_hour(open_info['end'])
-                    print(f"{day}: {start} - {end}")
+                    hours_str += f"{day}: {start} - {end}\n"
     else:
-        print("No data found for today")
+        hours_str = "No hours found for this business"
+    return hours_str
+response = get_business_query(api_key, business_id)
+
+
 display_today_hours(response)

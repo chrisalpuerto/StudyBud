@@ -7,9 +7,25 @@
     <title>Document</title>
 </head>
 <body>
-    <h1 class="text-3xl font-bold underline">
-        Hello World!
-    </h1>
-    
+    <div class="custom-card">
+        <h1 class="custom-header">
+            Welcome To StudyHub! 
+        </h1>
+        <form id="dataForm" method="POST" action="/">
+            <div class="data">
+                <label for="location">Where will you be studying today?: </label>
+                <select name="location" id="location" required>
+                    <option value="Cafe">Library</option>
+                    <option value="Libray">Home</option>
+                </select><br><br>
+                <label for="acompany">Will you be studying by yourself or with a group?: </label>
+                <select name="acompany" id="acompany" required>
+                    <option value="alone">Alone</option>
+                    <option value="group">Group</option>
+            </div>
+        <p class="custom-paragraph">
+            This is a demo of Tailwind CSS.
+        </p>
+        
 </body>
 </html>
